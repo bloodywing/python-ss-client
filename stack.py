@@ -10,19 +10,23 @@ class Stack:
 
     def add(self, item):
         if(self.contains(item) == False):
-            if(_use_hash == True):
-                _list.append(item.__hashCode)
+            if(self._use_hash == True):
+                self._list.append(item['__hashCode'])
             else:
-                _list.append(item)
+                self._list.append(item)
 
-        _list[_max:] = []
+        self._list[self._max:] = []
 
     def remove(self, item):
         if(self.contains(item) == True):
             pass
 
     def contains(self, item):
-        if(_use_hash == True):
-            return item.__hashCode in _list
+        x = None
+
+        if(self._use_hash == True):
+            x = item['__hashCode']
         else:
-            return item in _list
+            x = item
+
+        return x in self._list
