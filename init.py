@@ -1,22 +1,17 @@
 import sys
 import json
+from stack import Stack
+from messages import Message
 
 from pprint             import pprint
 from twisted.internet   import reactor
 from twisted.python     import log
 from autobahn.websocket import WebSocketClientFactory, WebSocketClientProtocol, connectWS
 
-
-#j_in = r'["foo", {"bar": ["baz", null, 1.0, 2]}]'
-#j_out = json.loads(j_in)
-
-#print j_in
-#print j_out
-#print json.dumps(j_out)
-
 class ScalableServerProtocol(WebSocketClientProtocol):
-    connected = False
-    user = 'Oby-chan'
+    _connected = False
+    _user = 'Oby-chan'
+    _history = Stack(True)
 
     def parseMessage(self, message):
 
@@ -28,17 +23,22 @@ class ScalableServerProtocol(WebSocketClientProtocol):
 
         if( type(message) != dict):
             message = {
-                'user': user,
+                'user': _user,
                 'message': message
             }
+
+        Message.generate(message)
 
         return message
 
     def send(self, message):
         message = self.parseMessage(message)
-        text = json.dump(message)
 
-        self.sendMessage(text)
+        if(_history.contains(message) == False):
+
+            text = json.dump(message)
+            self.sendMessage(text)
+            _history.add(message)
 
     def dump(self, message):
         pprint(message)
@@ -51,7 +51,9 @@ class ScalableServerProtocol(WebSocketClientProtocol):
     def onMessage(self, msg, binary):
         parsedMessage = self.parseMessage(msg)
 
-        self.dump(parsedMessage)
+        if(_history.contains(parsedMessage) == False):
+            self.dump(parsedMessage)
+            _history.add(parsedMessage)
 
 
 if __name__ == '__main__':
