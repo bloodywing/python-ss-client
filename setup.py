@@ -8,6 +8,6 @@ setup(name="ss-client",
       author="jpdokter",
       author_email="",
       url="https://github.com/WickedSik/python-ss-client",
-      packages=["ss-client"],
+      packages=["ss_client"],
       license = "",
       install_requires=["twisted", "autobahn", "pubsub"])

@@ -1,7 +1,7 @@
 import sys
 import json
-from stack import Stack
-from messages import Message
+from ss_client.stack import Stack
+from ss_client.messages import Message
 
 from pprint             import pprint
 from twisted.internet   import reactor
